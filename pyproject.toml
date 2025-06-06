@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hzzzwl-agriculture-mcp-x"
-version = "0.1.7"
+version = "0.1.8"
 authors = [
   {name = "hzzzwl", email = "1085501772@qq.com"},
 ]
@@ -14,7 +14,7 @@ requires-python = ">=3.12"
 classifiers = [
   "Programming Language :: Python :: 3"
 ]
-license = "MIT"
+license = "GPL-3.0"
 dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.9.0",
