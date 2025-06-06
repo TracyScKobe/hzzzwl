@@ -204,6 +204,33 @@ def get_monitor_info(areaName: str,cpname:str,year:int) -> Optional[Dict[str, An
     return result
 
 @mcp.tool()
+def get_monitor_task_info(areaName: str,taskName:str) -> Optional[Dict[str, Any]]:
+    """根据区划：areaName和任务：taskName，获得该地区该监测任务的完成情况，并给出下一年的任务安排建议。
+    返回json格式的数据，详细内容都在message字段中。"""
+
+    api_key = os.getenv("KEY")
+    test_url = api_url+"/mcp_server2/cellphone/getData.do?sysCmd=getJcQ4"
+    test_data = {"areaName": areaName, "taskName": taskName,"token":api_key,"mdName":"get_monitor_task_info"}
+    
+    # 发送请求
+    result = post_form_request(test_url, test_data)
+    return result
+
+@mcp.tool()
+def get_monitor_predictions_data(areaName: str,cpname:str) -> Optional[Dict[str, Any]]:
+    """根据区划：areaName，农产品名称：cpname，预测该地区该农产品未来几年的检测合格率。
+    返回json格式数据，其中history_data为jsonarray，里面包含历史检测数据：year:年度,all_num:抽样批次数量，qualified_num：合格批次数量，qualified_rat：合格率，
+    unqualified：不合格数量。predictions_data为jsonarray，里面包含预测的检测合格率：year:年度，qualified_rat_predicted：预测的合格率。"""
+
+    api_key = os.getenv("KEY")
+    test_url = api_url+"/getBccbContent"
+    test_data = {"areaName": areaName, "cpname": cpname,"token":api_key,"mdName":"get_monitor_predictions_data"}
+    
+    # 发送请求
+    result = post_form_request(test_url, test_data)
+    return result
+
+@mcp.tool()
 def get_risk_agricultural_products(areaName: str,year:int) -> Optional[Dict[str, Any]]:
     """根据区划：areaName，年度：year，获得该地区检测合格率较低的农产品(风险农产品)。
     返回json格式数据，其中list为jsonarray，里面包含sampid:产品id,name:产品名称，zcs：抽检数量，cs：不合格数量。"""
@@ -244,15 +271,20 @@ def get_sale_buy_num(areaName: str,name:str,year:int) -> Optional[Dict[str, Any]
 
 
 @mcp.tool()
-def getNzdByYpName(areaName: str,name:str) -> Optional[Dict[str, Any]]:
-    """根据区划：areaName和农资产品名称：name，获得该地区售卖该农资产品的农资店信息和农资产品信息。
+def getNzdByYpName(areaName: str,name:str,lon:str,lat:str) -> Optional[Dict[str, Any]]:
+    """根据区划：areaName(如：浙江省或金华市或义乌市或上溪镇，最小区划到乡镇级)，
+    农资产品名称：name，
+    经度：lon(如：120.111111)，纬度：lat(如：30.111111)
+    获得该地区售卖该农资产品的农资店信息，农资产品信息，以及根据提供的经纬度和农资店的距离信息。
     比如：用户想知道哪里可以购买到某某农资产品，可以使用该工具。
     返回json格式数据，其中list为jsonarray，里面包含nzdname：农资店名称,nzdaddress：农资店地址，
     nzdlxdh：农资店联系电话，name：农资产品名称，guig：农资产品规格，price：农资产品价格，
-    xl：农资产品销量，kc：农资产品库存。"""
+    xl：农资产品销量，kc：农资产品库存，
+    longitude：农资店所在地经度,latitude：农资店所在地纬度,jl：距离(km)。
+    """
     api_key = os.getenv("KEY")
     test_url = api_url+"/mcp_server1/api/zzchat/getNzdByYpName.do"
-    test_data = {"areaName": areaName, "name": name,"token":api_key,"mdName":"getNzdByYpName"}
+    test_data = {"areaName": areaName, "name": name,"lon":lon,"lat":lat,"token":api_key,"mdName":"getNzdByYpName"}
     
     # 发送请求
     result = post_form_request(test_url, test_data)
