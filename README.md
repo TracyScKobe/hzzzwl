@@ -109,7 +109,7 @@
 ### **输出**:
 农事指导意见，包含`content`等
 
-### 病虫测报信息 get_agricultural_disease_report_vector
+### 病虫测报信息 get_agricultural_disease_vector
 根据用户问题，获得病虫测报信息。
 ### **输入**:
 - `text` 问题
@@ -123,7 +123,7 @@
 ### **输出**:
 农业典型案例信息，包含`content`等
 
-### 农作物生长模式信息 get_agricultural_growth_model_vector
+### 农作物生长模式信息 get_agricultural_growth_vector
 根据用户问题，获得农作物生长模式信息。
 ### **输入**:
 - `text` 问题
