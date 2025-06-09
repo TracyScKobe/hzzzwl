@@ -45,7 +45,7 @@ def post_form_request(url: str, form_data: Dict[str, Any], **kwargs) -> Optional
     return None
 
 
-def get_now_time_y() -> list[TextContent]:
+def get_now_time() -> list[TextContent]:
     """获取当前时间"""
 
     current_time = datetime.now()
@@ -225,7 +225,7 @@ def get_monitor_task_info(areaName: str,taskName:str) -> list[TextContent]:
 
     return [TextContent(type="text", text=jj)]
 
-def get_monitor_predictions_data(areaName: str,cpname:str,year:int) -> list[TextContent]:
+def get_monitor_predictions_data(areaName: str,cpname:str) -> list[TextContent]:
     """根据区划：areaName，农产品名称：cpname，预测该地区该农产品未来几年的检测合格率。
     返回json格式数据，其中history_data为jsonarray，里面包含历史检测数据：year:年度,all_num:抽样批次数量，qualified_num：合格批次数量，qualified_rat：合格率，
     unqualified：不合格数量。predictions_data为jsonarray，里面包含预测的检测合格率：year:年度，qualified_rat_predicted：预测的合格率。"""
@@ -333,7 +333,7 @@ def get_agricultural_guidance_vector(text: str) -> list[TextContent]:
 
     return [TextContent(type="text", text=jj)]
 
-def get_agricultural_disease_report_vector(text: str) -> list[TextContent]:
+def get_agricultural_disease_vector(text: str) -> list[TextContent]:
     """根据用户的问题：text从病虫测报的向量库中查找出几段最近似的内容，需要你归纳总结形成答案给用户。
     返回json格式数据，其中data为jsonarray，里面包含content：近似的内容。
     从content中选取跟用户的问题相关的内容总结后返回给用户，无关的舍弃不要。
@@ -341,7 +341,7 @@ def get_agricultural_disease_report_vector(text: str) -> list[TextContent]:
 
 
     test_url = api_url+"/getNszdContent"
-    test_data = {"text": text,"token":api_key,"tag":"bccb","mdName":"get_agricultural_disease_report_vector"}
+    test_data = {"text": text,"token":api_key,"tag":"bccb","mdName":"get_agricultural_disease_vector"}
     
     # 发送请求
     result = post_form_request(test_url, test_data)
@@ -365,14 +365,14 @@ def get_agricultural_case_vector(text: str) -> list[TextContent]:
     return [TextContent(type="text", text=jj)]
 
 
-def get_agricultural_growth_model_vector(text: str) -> list[TextContent]:
+def get_agricultural_growth_vector(text: str) -> list[TextContent]:
     """根据用户的问题：text从农作物生长模式(如：生长环境选择，品种选择，生长期注意事项等)的向量库中查找出几段最近似的内容，需要你归纳总结形成答案给用户。
     返回json格式数据，其中data为jsonarray，里面包含content：近似的内容。
     从content中选取跟用户的问题相关的内容总结后返回给用户，无关的舍弃不要。
     """
 
     test_url = api_url+"/getNszdContent"
-    test_data = {"text": text,"token":api_key,"tag":"szms","mdName":"get_agricultural_growth_model_vector"}
+    test_data = {"text": text,"token":api_key,"tag":"szms","mdName":"get_agricultural_growth_vector"}
     
     # 发送请求
     result = post_form_request(test_url, test_data)
@@ -623,7 +623,7 @@ async def list_tools() -> list[types.Tool]:
             },
         ),
         types.Tool(
-            name="get_agricultural_disease_report_vector",
+            name="get_agricultural_disease_vector",
             description="根据用户的问题：text从病虫测报的向量库中查找出几段最近似的内容，需要你归纳总结形成答案给用户。返回json格式数据，其中data为jsonarray，里面包含content：近似的内容。从content中选取跟用户的问题相关的内容总结后返回给用户，无关的舍弃不要。",
             inputSchema={
                 "type": "object",
@@ -646,7 +646,7 @@ async def list_tools() -> list[types.Tool]:
             },
         ),
         types.Tool(
-            name="get_agricultural_growth_model_vector",
+            name="get_agricultural_growth_vector",
             description="根据用户的问题：text从农作物生长模式(如：生长环境选择，品种选择，生长期注意事项等)的向量库中查找出几段最近似的内容，需要你归纳总结形成答案给用户。返回json格式数据，其中data为jsonarray，里面包含content：近似的内容。从content中选取跟用户的问题相关的内容总结后返回给用户，无关的舍弃不要。",
             inputSchema={
                 "type": "object",
@@ -658,7 +658,7 @@ async def list_tools() -> list[types.Tool]:
         ),
         
         types.Tool(
-            name="get_now_time_y",
+            name="get_now_time",
             description="获取当前时间",
             inputSchema={
                 "type": "object",
@@ -744,17 +744,17 @@ async def call_tool_x(name: str, arguments: dict) -> list[TextContent]:
     elif name == "get_agricultural_guidance_vector":
         text = arguments.get("text")
         return get_agricultural_guidance_vector(text)
-    elif name == "get_agricultural_disease_report_vector":
+    elif name == "get_agricultural_disease_vector":
         text = arguments.get("text")
-        return get_agricultural_disease_report_vector(text)
+        return get_agricultural_disease_vector(text)
     elif name == "get_agricultural_case_vector":
         text = arguments.get("text")
         return get_agricultural_case_vector(text)
-    elif name == "get_agricultural_growth_model_vector":
+    elif name == "get_agricultural_growth_vector":
         text = arguments.get("text")
-        return get_agricultural_growth_model_vector(text)
-    elif name == "get_now_time_y":
-        return get_now_time_y()
+        return get_agricultural_growth_vector(text)
+    elif name == "get_now_time":
+        return get_now_time()
     
     raise ValueError(f"未知的工具: {name}")
 
