@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hzzzwl-agriculture-mcp-x"
-version = "0.2.3"
+version = "0.2.7"
 authors = [
   {name = "hzzzwl", email = "1085501772@qq.com"},
 ]
