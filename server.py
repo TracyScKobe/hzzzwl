@@ -380,6 +380,23 @@ def get_agricultural_growth_vector(text: str) -> list[TextContent]:
 
     return [TextContent(type="text", text=jj)]
 
+def get_agricultural_encyclopedia(text: str) -> list[TextContent]:
+    """根据用户的问题：text从农业百科（包含：兽医,植物病理学,养蜂,土壤,水利,水产业,蔬菜,生物学,森林工业,农作物,农业气象,农业历史,农业经济,
+    农业机械化,农业化学,农业工程,农药,林业,昆虫,果树,观赏园艺,畜牧业,茶业,蚕业等）的向量库中查找出几段最近似的内容，需要你归纳总结形成答案给用户。
+    返回json格式数据，其中data为jsonarray，里面包含content：近似的内容。
+    从content中选取跟用户的问题相关的内容总结后返回给用户，无关的舍弃不要。
+    注意：在使用其他工具无法很好的回答用户提出的关于农业方面的问题，可使用该工具。
+    """
+
+    test_url = api_url+"/getNszdContent"
+    test_data = {"text": text,"token":api_key,"tag":"bkqs","mdName":"get_agricultural_encyclopedia"}
+    
+    # 发送请求
+    result = post_form_request(test_url, test_data)
+    jj = json.dumps(result, ensure_ascii=False, indent=4)
+
+    return [TextContent(type="text", text=jj)]
+
 
 async def list_tools() -> list[types.Tool]:
     """
@@ -656,6 +673,18 @@ async def list_tools() -> list[types.Tool]:
                 "required": ["text"],
             },
         ),
+
+        types.Tool(
+            name="get_agricultural_encyclopedia",
+            description="根据用户的问题：text从农业百科（包含：兽医,植物病理学,养蜂,土壤,水利,水产业,蔬菜,生物学,森林工业,农作物,农业气象,农业历史,农业经济,农业机械化,农业化学,农业工程,农药,林业,昆虫,果树,观赏园艺,畜牧业,茶业,蚕业等）的向量库中查找出几段最近似的内容，需要你归纳总结形成答案给用户。返回json格式数据，其中data为jsonarray，里面包含content：近似的内容。从content中选取跟用户的问题相关的内容总结后返回给用户，无关的舍弃不要。注意：在使用其他工具无法很好的回答用户提出的关于农业方面的问题，可使用该工具。",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "text": {"type": "string", "description": "用户的问题"}
+                },
+                "required": ["text"],
+            },
+        ),
         
         types.Tool(
             name="get_now_time",
@@ -753,6 +782,9 @@ async def call_tool_x(name: str, arguments: dict) -> list[TextContent]:
     elif name == "get_agricultural_growth_vector":
         text = arguments.get("text")
         return get_agricultural_growth_vector(text)
+    elif name == "get_agricultural_encyclopedia":
+        text = arguments.get("text")
+        return get_agricultural_encyclopedia(text)
     elif name == "get_now_time":
         return get_now_time()
     
